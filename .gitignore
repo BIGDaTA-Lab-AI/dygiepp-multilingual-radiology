@@ -9,4 +9,5 @@ predictions/*
 **/stanford*/*
 scratch*
 .idea/
-venv/
+venv/*
+data/*
