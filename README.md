@@ -1,4 +1,4 @@
-# Information Extraction from Radiology reports based on DyGIE++
+# Information Extraction from Turkish Radiology reports based on DyGIE++
 
 ## Setup
 - Use python version 3.7
