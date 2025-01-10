@@ -21,7 +21,7 @@ template.DyGIE {
       },
       num_epochs: 150,
       grad_norm: 5.0,
-      cuda_device: 0,
+      cuda_device: -1,
       validation_metric: '+MEAN__ner_f1',
       optimizer: {
         type: 'adamw',

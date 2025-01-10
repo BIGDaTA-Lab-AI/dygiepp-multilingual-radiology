@@ -114,20 +114,22 @@ class EventExtractor(Model):
 
     @overrides
     def forward(self,  # type: ignore
-                trigger_mask,
-                trigger_embeddings,
-                spans,
-                span_mask,
-                span_embeddings,  # TODO(dwadden) add type.
-                sentence_lengths,
-                trigger_labels,
-                argument_labels,
-                ner_labels,
-                metadata: List[Dict[str, Any]] = None) -> Dict[str, torch.Tensor]:
+                # trigger_mask,
+                # trigger_embeddings,
+                # spans,
+                # span_mask,
+                # span_embeddings,  # TODO(dwadden) add type.
+                # sentence_lengths,
+                # trigger_labels,
+                # argument_labels,
+                # ner_labels,
+                # metadata: List[Dict[str, Any]] = None
+                *inputs) -> Dict[str, torch.Tensor]:
         """
         The trigger embeddings are just the contextualized token embeddings, and the trigger mask is
         the text mask. For the arguments, we consider all the spans.
         """
+        trigger_mask, trigger_embeddings, spans, span_mask, span_embeddings, sentence_lengths, trigger_labels, argument_labels, ner_labels, metadata = inputs
         self._active_dataset = metadata.dataset
         self._active_namespaces = {"trigger": f"{self._active_dataset}__trigger_labels",
                                    "argument": f"{self._active_dataset}__argument_labels"}

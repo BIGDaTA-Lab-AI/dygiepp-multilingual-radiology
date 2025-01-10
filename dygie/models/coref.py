@@ -385,7 +385,7 @@ class CorefResolver(Model):
         return output_dict
 
     @overrides
-    def make_output_human_readable(self, output_dict: Dict[str, torch.Tensor]):
+    def make_output_human_readable(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
         """
         Converts the list of spans and predicted antecedent indices into clusters
         of spans for each element in the batch.

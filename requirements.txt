@@ -1,6 +1,6 @@
 # Modeling
-allennlp==1.1.0
-allennlp_models==1.1.0
+allennlp==2.10.1
+allennlp_models==2.10.1
 
 # Data munging
 pandas==0.25.2
@@ -12,5 +12,6 @@ python-Levenshtein
 optuna>=2.1.0
 
 # Custom
-fire
-jsonlines
+overrides==6.1.0
+accelerate==0.20.3
+gdown

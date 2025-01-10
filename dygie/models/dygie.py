@@ -160,7 +160,7 @@ class DyGIE(Model):
         # TODO(dwadden) Get rid of this when I find a better way to do it.
         return x if x is None else x.squeeze(0)
 
-    @overrides
+    @overrides(check_signature=False)
     def forward(self,
                 text,
                 spans,
@@ -169,11 +169,14 @@ class DyGIE(Model):
                 coref_labels=None,
                 relation_labels=None,
                 trigger_labels=None,
-                argument_labels=None):
+                argument_labels=None) -> Dict[str, torch.Tensor]:
         """
         TODO(dwadden) change this.
         """
+        # spans, span_mask, span_embeddings, sentence_lengths, ner_labels, metadata = inputs
+
         # In AllenNLP, AdjacencyFields are passed in as floats. This fixes it.
+        # print(relation_labels)
         if relation_labels is not None:
             relation_labels = relation_labels.long()
         if argument_labels is not None:
@@ -192,6 +195,7 @@ class DyGIE(Model):
         trigger_labels = self._debatch(trigger_labels)  # TODO(dwadden)
         argument_labels = self._debatch(argument_labels)  # TODO(dwadden)
 
+        # print(ner_labels)
         # Encode using BERT, then debatch.
         # Since the data are batched, we use `num_wrapping_dims=1` to unwrap the document dimension.
         # (1, n_sents, max_sententence_length, embedding_dim)
@@ -287,7 +291,7 @@ class DyGIE(Model):
         return new_span_embeddings
 
     @overrides
-    def make_output_human_readable(self, output_dict: Dict[str, torch.Tensor]):
+    def make_output_human_readable(self, output_dict: Dict[str, torch.Tensor]) -> Dict[str, torch.Tensor]:
         """
         Converts the list of spans and predicted antecedent indices into clusters
         of spans for each element in the batch.
@@ -307,6 +311,9 @@ class DyGIE(Model):
             original document.
         """
 
+        # print("DYGIE.PY File")
+        # print(output_dict)
+        
         doc = copy.deepcopy(output_dict["metadata"])
 
         if self._loss_weights["coref"] > 0:

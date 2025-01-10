@@ -1,5 +1,5 @@
 import logging
-from typing import Any, Dict, List, Optional, Tuple, DefaultDict, Set, Union
+from typing import Iterable, Any, Dict, List, Optional, Tuple, DefaultDict, Set, Union
 import json
 import pickle as pkl
 import warnings
@@ -40,7 +40,7 @@ class DyGIEReader(DatasetReader):
         self._token_indexers = token_indexers or {"tokens": SingleIdTokenIndexer()}
 
     @overrides
-    def _read(self, file_path: str):
+    def _read(self, file_path: str) -> Iterable[Instance]:
         # if `file_path` is a URL, redirect to the cache
         file_path = cached_path(file_path)
 
@@ -181,10 +181,12 @@ class DyGIEReader(DatasetReader):
         return fields
 
     @overrides
-    def text_to_instance(self, doc_text: Dict[str, Any]):
+    # def text_to_instance(self, doc_text: Dict[str, Any]) -> Instance:
+    def text_to_instance(self, *inputs) -> Instance:
         """
         Convert a Document object into an instance.
         """
+        doc_text = inputs[0]
         doc = Document.from_json(doc_text)
 
         # Make sure there are no single-token sentences; these break things.
@@ -199,13 +201,13 @@ class DyGIEReader(DatasetReader):
 
         return Instance(fields)
 
-    @overrides
+    # @overrides
     def _instances_from_cache_file(self, cache_filename):
         with open(cache_filename, "rb") as f:
             for entry in pkl.load(f):
                 yield entry
 
-    @overrides
+    # @overrides
     def _instances_to_cache_file(self, cache_filename, instances):
         with open(cache_filename, "wb") as f:
             pkl.dump(instances, f, protocol=pkl.HIGHEST_PROTOCOL)

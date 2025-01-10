@@ -106,15 +106,13 @@
       },
     },
     data_loader: {
-      sampler: {
-        type: "random",
-      }
+      batch_size: 1
     },
     trainer: {
       checkpointer: {
-        num_serialized_models_to_keep: 3,
+        num_serialized_models_to_keep: 1,
       },
-      num_epochs: 50,
+      num_epochs: 30,
       grad_norm: 5.0,
       cuda_device: dygie.cuda_device,
       validation_metric: validation_metrics[dygie.target_task],

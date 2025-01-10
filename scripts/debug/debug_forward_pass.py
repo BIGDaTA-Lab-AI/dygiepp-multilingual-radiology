@@ -4,7 +4,7 @@ from _jsonnet import evaluate_file
 
 from allennlp.data import token_indexers, vocabulary
 from allennlp.modules import token_embedders, text_field_embedders
-from allennlp.data.dataloader import PyTorchDataLoader
+from allennlp.data.data_loaders import PyTorchDataLoader
 
 from dygie.data.dataset_readers.dygie import DyGIEReader
 from dygie.models import dygie

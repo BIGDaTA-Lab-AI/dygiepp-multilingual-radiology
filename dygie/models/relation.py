@@ -67,15 +67,17 @@ class RelationExtractor(Model):
 
     @overrides
     def forward(self,  # type: ignore
-                spans: torch.IntTensor,
-                span_mask,
-                span_embeddings,  # TODO(dwadden) add type.
-                sentence_lengths,
-                relation_labels: torch.IntTensor = None,
-                metadata: List[Dict[str, Any]] = None) -> Dict[str, torch.Tensor]:
+                # spans: torch.IntTensor,
+                # span_mask,
+                # span_embeddings,  # TODO(dwadden) add type.
+                # sentence_lengths,
+                # relation_labels: torch.IntTensor = None,
+                # metadata: List[Dict[str, Any]] = None
+                *inputs) -> Dict[str, torch.Tensor]:
         """
         TODO(dwadden) Write documentation.
         """
+        spans, span_mask, span_embeddings, sentence_lengths, ner_labels, metadata = inputs
         self._active_namespace = f"{metadata.dataset}__relation_labels"
 
         if self._active_namespace not in self._relation_scorers:

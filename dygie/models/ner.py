@@ -73,15 +73,17 @@ class NERTagger(Model):
 
     @overrides
     def forward(self,  # type: ignore
-                spans: torch.IntTensor,
-                span_mask: torch.IntTensor,
-                span_embeddings: torch.IntTensor,
-                sentence_lengths: torch.Tensor,
-                ner_labels: torch.IntTensor = None,
-                metadata: List[Dict[str, Any]] = None) -> Dict[str, torch.Tensor]:
+                # spans: torch.IntTensor,
+                # span_mask: torch.IntTensor,
+                # span_embeddings: torch.IntTensor,
+                # sentence_lengths: torch.Tensor,
+                # ner_labels: torch.IntTensor = None,
+                # metadata: List[Dict[str, Any]] = None
+                *inputs) -> Dict[str, torch.Tensor]:
         """
         TODO(dwadden) Write documentation.
         """
+        spans, span_mask, span_embeddings, sentence_lengths, ner_labels, metadata = inputs
 
         # Shape: (Batch size, Number of Spans, Span Embedding Size)
         # span_embeddings
@@ -155,16 +157,25 @@ class NERTagger(Model):
         "Loop over the metrics for all namespaces, and return as dict."
         res = {}
         for namespace, metrics in self._ner_metrics.items():
-            precision, recall, f1 = metrics.get_metric(reset)
+            # precision, recall, f1 = metrics.get_metric(reset)
+            precision, recall, f1, per_class_precision, per_class_recall, per_class_f1 = metrics.get_metric(reset)
             prefix = namespace.replace("_labels", "")
             to_update = {f"{prefix}_precision": precision,
                          f"{prefix}_recall": recall,
                          f"{prefix}_f1": f1}
+            
+            # Include per-class metrics in the dictionary
+            for class_idx, (class_precision, class_recall, class_f1) in enumerate(zip(per_class_precision, per_class_recall, per_class_f1)):
+                to_update[f"{prefix}_class_{class_idx}_precision"] = class_precision
+                to_update[f"{prefix}_class_{class_idx}_recall"] = class_recall
+                to_update[f"{prefix}_class_{class_idx}_f1"] = class_f1
+            
             res.update(to_update)
 
         res_avg = {}
         for name in ["precision", "recall", "f1"]:
-            values = [res[key] for key in res if name in key]
+            # values = [res[key] for key in res if name in key]
+            values = [res[key] for key in res if name in key and "_class_" not in key]
             res_avg[f"MEAN__ner_{name}"] = sum(values) / len(values) if values else 0
             res.update(res_avg)
 
