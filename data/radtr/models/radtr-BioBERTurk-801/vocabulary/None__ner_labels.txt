@@ -1,0 +1,11 @@
+
+Obs_Anatomy
+Obs_Present
+Obs_Absent
+Differential Diagnosis
+Obs_Technical
+Obs_Uncertain
+Symptom_P
+Obs_Advice
+Symptom_A
+Obs_Critical
